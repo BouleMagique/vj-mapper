@@ -1,0 +1,182 @@
+{
+  "groups": [
+    {
+      "name": "Verticales centre",
+      "effect": 2,
+      "band": 0,
+      "color": [
+        0.25,
+        0.55,
+        1.0
+      ],
+      "color2": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "speed": 1.0,
+      "intensity": 1.0,
+      "spread": 0.0,
+      "enabled": true
+    },
+    {
+      "name": "Verticales côtés",
+      "effect": 3,
+      "band": 3,
+      "color": [
+        1.0,
+        0.3,
+        0.75
+      ],
+      "color2": [
+        1.0,
+        0.85,
+        0.4
+      ],
+      "speed": 1.2,
+      "intensity": 1.0,
+      "spread": 0.25,
+      "enabled": true
+    },
+    {
+      "name": "Horizontales",
+      "effect": 1,
+      "band": 2,
+      "color": [
+        0.4,
+        1.0,
+        0.6
+      ],
+      "color2": [
+        0.1,
+        0.4,
+        1.0
+      ],
+      "speed": 0.8,
+      "intensity": 1.0,
+      "spread": 0.1,
+      "enabled": true
+    }
+  ],
+  "strips": [
+    {
+      "a": [
+        0.4,
+        0.92
+      ],
+      "b": [
+        0.4,
+        0.12
+      ],
+      "width": 0.012,
+      "group": 0,
+      "reverse": false
+    },
+    {
+      "a": [
+        0.5,
+        0.92
+      ],
+      "b": [
+        0.5,
+        0.12
+      ],
+      "width": 0.012,
+      "group": 0,
+      "reverse": false
+    },
+    {
+      "a": [
+        0.6,
+        0.92
+      ],
+      "b": [
+        0.6,
+        0.12
+      ],
+      "width": 0.012,
+      "group": 0,
+      "reverse": false
+    },
+    {
+      "a": [
+        0.15,
+        0.92
+      ],
+      "b": [
+        0.15,
+        0.12
+      ],
+      "width": 0.012,
+      "group": 1,
+      "reverse": false
+    },
+    {
+      "a": [
+        0.85,
+        0.92
+      ],
+      "b": [
+        0.85,
+        0.12
+      ],
+      "width": 0.012,
+      "group": 1,
+      "reverse": false
+    },
+    {
+      "a": [
+        0.15,
+        0.22
+      ],
+      "b": [
+        0.85,
+        0.22
+      ],
+      "width": 0.012,
+      "group": 2,
+      "reverse": false
+    },
+    {
+      "a": [
+        0.15,
+        0.42000000000000004
+      ],
+      "b": [
+        0.85,
+        0.42000000000000004
+      ],
+      "width": 0.012,
+      "group": 2,
+      "reverse": true
+    },
+    {
+      "a": [
+        0.15,
+        0.62
+      ],
+      "b": [
+        0.85,
+        0.62
+      ],
+      "width": 0.012,
+      "group": 2,
+      "reverse": false
+    },
+    {
+      "a": [
+        0.15,
+        0.8200000000000001
+      ],
+      "b": [
+        0.85,
+        0.8200000000000001
+      ],
+      "width": 0.012,
+      "group": 2,
+      "reverse": true
+    }
+  ],
+  "background": null,
+  "bg_opacity": 0.6
+}

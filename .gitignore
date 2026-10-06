@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+
+
+# Environnement
+.env
+.env.local
+.env.*.local
+
+# Logs & fichiers générés
+*.log
+logs/
+
+
+# OS & éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Scènes de travail (garder seulement les exemples)
+scenes/*.json
+!scenes/example_*.json
+
+# Claude
+.claude/

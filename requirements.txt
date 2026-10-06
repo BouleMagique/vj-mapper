@@ -1,0 +1,7 @@
+moderngl>=5.12
+glfw>=2.8
+imgui-bundle>=1.92
+PyOpenGL>=3.1.9
+numpy
+sounddevice
+pillow
