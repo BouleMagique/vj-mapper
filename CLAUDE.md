@@ -8,6 +8,8 @@ horizontaux. Machine cible en soirée : **Mac Pro 2013** (macOS Monterey) + proj
 **Cible d'exécution : workstation / Mac (GPU + affichage) — jamais dans le LXC devbox.**
 
 ## État
+> **Plan complet post-V0 : `PLAN.md`** (reprendre à « §4 Checklist de reprise »).
+
 - [x] V0 (2026-10-06) : scène (barres + groupes, JSON), 6 effets GLSL, éditeur ImGui (tracer, sélection,
       drag, Maj = H/V, photo de fond), entrée son live + simulation, sortie projo plein écran vsync, calibration.
 - [ ] Test réel Mac Pro + projo
