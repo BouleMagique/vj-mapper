@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -29,6 +30,21 @@ from .scene import garage_door_template  # noqa: E402
 DEFAULT_SIZE = (1920, 1080)
 
 
+def scenes_dir() -> Path:
+    """Repo `scenes/` from source; a user folder once packaged (an AppImage or a
+    signed .app is read-only), seeded with the bundled examples."""
+    if not getattr(sys, "frozen", False):
+        d = Path(__file__).resolve().parent.parent / "scenes"
+        d.mkdir(exist_ok=True)
+        return d
+    d = Path.home() / "Documents" / "VJ Mapper"
+    d.mkdir(parents=True, exist_ok=True)
+    for example in (Path(sys._MEIPASS) / "scenes").glob("example_*.json"):
+        if not (d / example.name).exists():
+            shutil.copy2(example, d / example.name)
+    return d
+
+
 class App:
     def __init__(self):
         if _WAYLAND:
@@ -52,8 +68,7 @@ class App:
             imgui.get_io().fonts.add_font_from_file_ttf(str(font), 17.0)
         self.imgui = GlfwRenderer(self.win)
 
-        self.scenes_dir = Path(__file__).resolve().parent.parent / "scenes"
-        self.scenes_dir.mkdir(exist_ok=True)
+        self.scenes_dir = scenes_dir()
         self.scene = garage_door_template()
         self.audio = LiveAudio()
         self.audio.simulate = True              # something moves before music is wired

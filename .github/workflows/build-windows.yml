@@ -1,0 +1,53 @@
+name: Build Windows exe
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag de la release ou uploader l'exe"
+        required: true
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build VJMapper.exe
+        run: |
+          $imgui = python -c "import imgui_bundle,os;print(os.path.dirname(imgui_bundle.__file__))"
+          pyinstaller --onefile --windowed --name VJMapper `
+            --add-data "vjmapper/shaders;vjmapper/shaders" `
+            --add-data "scenes/example_garage_door.json;scenes" `
+            --add-data "$imgui/assets/fonts;imgui_bundle/assets/fonts" `
+            --collect-binaries glfw `
+            --collect-all moderngl --collect-all glcontext `
+            main.py
+
+      # Cible = le tag qui a declenche le build, ou celui passe en input — jamais
+      # un tag en dur, sinon une rebuild ecrase les assets d'une version publiee.
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: gh release upload "$env:TAG" dist/VJMapper.exe --clobber
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VJMapper-windows
+          path: dist/VJMapper.exe

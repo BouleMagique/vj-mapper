@@ -4,7 +4,21 @@ Mapping 2D audio-réactif pour la projection en soirée : on trace des **barres 
 
 > Statut : **V0** (2026-10-06) — tracé de barres, 6 effets, entrée son live, sortie projo, mode calibration. Pas encore de MIDI.
 
-## Lancer
+## Télécharger
+
+Page **[Releases](https://github.com/BouleMagique/vj-mapper/releases)** :
+
+| OS | Fichier | Lancer |
+|----|---------|--------|
+| **Linux** | `VJMapper-x86_64.AppImage` | `chmod +x` puis double-clic |
+| **Windows** | `VJMapper.exe` | double-clic (SmartScreen : *Informations complémentaires → Exécuter quand même*) |
+| **macOS Apple Silicon** | `VJMapper-macos-arm64.zip` | dézipper, `xattr -dr com.apple.quarantine VJMapper.app`, clic droit → Ouvrir |
+| **macOS Intel (12+)** | `VJMapper-macos-x86_64.zip` | idem — compilé pour Monterey (Mac Pro 2013) |
+
+Version packagée : les scènes sont dans `~/Documents/VJ Mapper` (la scène d'exemple y est copiée au premier lancement).
+macOS demande l'accès au micro au premier *● Live* : nécessaire pour lire BlackHole.
+
+## Lancer depuis les sources
 
 ```bash
 python -m venv ~/Envs/vj-mapper
@@ -38,6 +52,16 @@ Canevas : clic = sélectionner, glisser une extrémité ou la barre, `Suppr` sup
 - **Linux** (PipeWire/Pulse) : les sorties apparaissent comme « Sortie PC : … ».
 - **macOS** : [BlackHole](https://github.com/ExistentialAudio/BlackHole) + périphérique multi-sortie.
 - **Windows** : « Mixage stéréo » ou VB-Cable.
+
+## Builds
+
+```bash
+bash build-linux.sh                      # -> dist/VJMapper-x86_64.AppImage
+bash build-macos.sh                      # -> dist/VJMapper-macos-<arch>.zip (arch native)
+TARGET_ARCH=x86_64 bash build-macos.sh   # Intel/macOS 12 depuis Apple Silicon (Rosetta)
+```
+Windows : CI GitHub (`.github/workflows/build-windows.yml`), déclenchée par un tag `v*`.
+Build Intel : imgui-bundle n'a pas de wheel x86_64 pour macOS < 14, il est compilé depuis les sources (long).
 
 ## Stack
 
