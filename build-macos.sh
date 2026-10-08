@@ -72,7 +72,10 @@ if [ "$ARCH" = "x86_64" ]; then
         -r req-wheels.txt pyinstaller -q
     if ! $RUN venv/bin/python -c 'import imgui_bundle' 2>/dev/null; then
         echo "     imgui-bundle compile depuis les sources (long : 20-40 min)..."
-        $RUN venv/bin/pip install --no-binary imgui-bundle "$(grep '^imgui-bundle' requirements.txt)"
+        # nanobind 3 (aout 2026) a casse l'API utilisee par imgui-bundle 1.92.x
+        echo "nanobind<3" > build-constraints.txt
+        PIP_CONSTRAINT="$PWD/build-constraints.txt" PIP_BUILD_CONSTRAINT="$PWD/build-constraints.txt" \
+            $RUN venv/bin/pip install --no-binary imgui-bundle "$(grep '^imgui-bundle' requirements.txt)"
     fi
 else
     $RUN venv/bin/pip install -r requirements.txt -q
