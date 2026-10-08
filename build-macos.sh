@@ -11,7 +11,8 @@
 #
 # Build Intel : les wheels imgui-bundle x86_64 exigent macOS 14 ; pour viser
 # macOS 12 on le compile depuis les sources (long : ~20-40 min, cmake recupere
-# par pip). Python 3.12 recupere par uv (~/.local/bin, sans sudo).
+# par pip ; garde dans le venv pour les builds suivants). Les autres deps sont
+# forcees en wheels macOS 12. Python 3.12 recupere par uv (~/.local/bin, sans sudo).
 # =============================================================================
 set -euo pipefail
 
@@ -23,10 +24,8 @@ BUILD="$HOME/.cache/vj-mapper-build-macos-$ARCH"
 OUT="$SRC/dist"
 PYREQ="3.12"
 RUN=""
-PIPFLAGS=""
 if [ "$ARCH" = "x86_64" ]; then
-    export MACOSX_DEPLOYMENT_TARGET=12.0
-    PIPFLAGS="--no-binary imgui-bundle"
+    export MACOSX_DEPLOYMENT_TARGET=12.0 ARCHFLAGS="-arch x86_64"
     [ "$(uname -m)" = "arm64" ] && RUN="arch -x86_64"
 fi
 
@@ -54,16 +53,31 @@ echo "[..] Copie des sources..."
 mkdir -p "$BUILD/src"
 rsync -a --delete \
     --exclude venv --exclude .git --exclude __pycache__ --exclude dist --exclude build \
+    --exclude wheels-mac12 \
     "$SRC"/ "$BUILD/src"/
 cd "$BUILD/src"
 
 # --- Venv + deps + PyInstaller ----------------------------------------------
 [ -d venv ] || $RUN "$PY" -m venv venv
 echo "[..] Installation des dependances + PyInstaller..."
-[ -n "$PIPFLAGS" ] && echo "     (imgui-bundle compile depuis les sources : long)"
 $RUN venv/bin/pip install --upgrade pip -q
-$RUN venv/bin/pip install $PIPFLAGS -r requirements.txt -q
-$RUN venv/bin/pip install pyinstaller -q
+if [ "$ARCH" = "x86_64" ]; then
+    # pip choisit les wheels d'apres le macOS de l'HOTE (numpy en macosx_14_0...) :
+    # wheels forcees macOS 12, puis imgui-bundle compile pour macOS 12.
+    grep -v '^imgui-bundle' requirements.txt > req-wheels.txt
+    rm -rf wheels-mac12
+    $RUN venv/bin/pip download -r req-wheels.txt pyinstaller -q -d wheels-mac12 \
+        --only-binary=:all: --platform macosx_12_0_x86_64 --python-version "$PYREQ"
+    $RUN venv/bin/pip install --no-index --find-links wheels-mac12 --force-reinstall \
+        -r req-wheels.txt pyinstaller -q
+    if ! $RUN venv/bin/python -c 'import imgui_bundle' 2>/dev/null; then
+        echo "     imgui-bundle compile depuis les sources (long : 20-40 min)..."
+        $RUN venv/bin/pip install --no-binary imgui-bundle "$(grep '^imgui-bundle' requirements.txt)"
+    fi
+else
+    $RUN venv/bin/pip install -r requirements.txt -q
+    $RUN venv/bin/pip install pyinstaller -q
+fi
 echo "[OK] Environnement de build pret"
 
 # --- PyInstaller : bundle .app ----------------------------------------------
